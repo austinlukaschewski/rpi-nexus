@@ -1,0 +1,42 @@
+services:
+  # MinIO object storage
+  minio:
+    image: quay.io/minio/minio:latest
+    container_name: minio
+    restart: always
+    environment:
+      MINIO_ROOT_USER: nexus
+      MINIO_ROOT_PASSWORD: skywalker
+    ports:
+      - 8300:8300
+    volumes:
+      - /var/minio/data:/data:rw
+    command: server /data
+
+  # MongoDB NoSQL database
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: nexus
+      MONGO_INITDB_ROOT_PASSWORD: skywalker
+    ports:
+      - 27017:27017
+    volumes:
+      - /var/mongodb/data:/data/db:rw
+
+  # PostgreSQL database
+  # NOTE: At some point, I would like to use master/slave replication
+  postgresql:
+    image: postgres:latest
+    container_name: postgresql
+    restart: always
+    environment:
+      POSTGRES_USER: nexus
+      POSTGRES_PASSWORD: skywalker
+      POSTGRES_DB: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - /var/postgresql/data:/var/lib/postgresql/18/data:rw
